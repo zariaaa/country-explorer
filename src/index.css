@@ -1,0 +1,28 @@
+#root {
+    max-width: 100% !important;
+    margin: auto !important;
+    padding: 0 !important;
+}
+
+html {
+    background-color: #333 !important;
+}
+
+img:hover {
+    cursor: pointer;
+}
+
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.searchbar {
+    display: flex;
+    justify-content: center;
+}
+.search-items {
+    display: flex;
+    width: 50%;
+}
