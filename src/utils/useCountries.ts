@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import type { Country } from '../interfaces/Country.interface';
 
-const API_URL = 'https://restcountries.com/v3.1/all';
+const API_URL = 'https://restcountries.com/v3.1/all?fields=name,flags,capital,region,subregion,population,area,languages,currencies,cca3';
 
 export function useCountries() {
     const [countries, setCountries] = useState<Country[]>([]);

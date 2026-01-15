@@ -5,6 +5,7 @@ import CountriesList from './components/CountriesList';
 import ErrorBanner from './components/ErrorBanner';
 import { useCountries } from './utils/useCountries';
 import './App.css';
+import { Header } from './components/Header';
 
 const App = () => {
     const { countries, error, loading, refetch } = useCountries();
@@ -45,16 +46,21 @@ const App = () => {
         );
     }
     return (
-        <Container fixed>
+        <Box sx={{
+            bgcolor: 'background.default',
+            transition: 'background-color 0.3s ease'
+        }}>
+        <Header />
+        <Container>
             {error && <ErrorBanner error={error.toString()} onRetry={refetch} />}
             <SearchBar
                 setSearchTerm={setSearchTerm}
                 setSelectedRegion={setSelectedRegion}
                 regions={uniqueRegions}
-                selectedRegion={selectedRegion}
-            />
+                selectedRegion={selectedRegion} />
             <CountriesList listOfData={filteredCountries} loading={loading} />
         </Container>
+         </Box>
     );
 };
 

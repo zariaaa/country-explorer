@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
-import { TextField, Select, MenuItem, FormControl, InputLabel, debounce } from '@mui/material';
+import { TextField, Select, MenuItem, FormControl, debounce, InputAdornment } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
 import type { SearchBarProps } from '../interfaces/Country.interface';
+import {  Search } from '@mui/icons-material';
 
 const SearchBar = ({
     setSearchTerm,
@@ -31,26 +32,53 @@ const SearchBar = ({
 
     return (
         <div className="searchbar">
-            <div className="search-items">
+            <div className="search-items" style={{ display: 'flex', margin: '1rem 0rem',gap: '1rem', alignItems: 'center' }}>
                 <TextField
-                    fullWidth
-                    label="Search by Name"
+                    placeholder="Search by Name"
+                      slotProps={{
+                    input: {
+                        startAdornment: (
+                        <InputAdornment position="start">
+                            <Search />
+                        </InputAdornment>
+                        ),
+                    },
+                    }}
                     variant="outlined"
                     onChange={handleSearchChange}
-                    sx={{ backgroundColor: 'white', margin: '0rem 1rem', borderRadius: '5px' }}
+                    sx={{ borderRadius: '15px', flex: '0 0 70%',
+                           '& .MuiOutlinedInput-root': {
+                            borderRadius: '15px',
+                            },  
+                     }}
                     aria-label="Search countries by name"
                 />
-                <FormControl fullWidth>
-                    <InputLabel id="region-select-label">Filter by Region</InputLabel>
+                <FormControl sx={{ flex: '0 0 calc(30% - 1rem)' }}>
                     <Select
-                        labelId="region-select-label"
-                        value={selectedRegion}
-                        label="Filter by Region"
+                        variant="outlined"
+                        value={selectedRegion || 'all'}
+                        displayEmpty
                         onChange={handleRegionChange}
-                        sx={{ backgroundColor: 'white', borderRadius: '5px' }}
+                        defaultValue='All Regions'
+                          MenuProps={{
+                            PaperProps: {
+                            sx: {
+                                borderRadius: '15px',
+                                mt: 1,
+                                boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                            },
+                            },
+                            MenuListProps: {
+                            sx: {
+                                padding: 0,
+                            },
+                            },
+                            disableScrollLock: true,
+                        }}
+                        sx={{  borderRadius: '15px' , textAlign: 'left',}}
                         aria-label="Select region to filter countries"
                     >
-                        <MenuItem value="">All Regions</MenuItem>
+                        <MenuItem value="all">All Regions</MenuItem>
                         {regions.map((region) => (
                             <MenuItem key={region} value={region}>
                                 {region}

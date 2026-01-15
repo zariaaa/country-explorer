@@ -5,11 +5,24 @@
 }
 
 html {
-    background-color: #333 !important;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 img:hover {
     cursor: pointer;
+}
+.logo {
+    display: flex;
+    height: auto;
+    width: auto;
+    justify-content: center;
+    align-items: center;
 }
 
 .main-container {
@@ -21,8 +34,9 @@ img:hover {
 .searchbar {
     display: flex;
     justify-content: center;
+    margin: 1rem 0;
 }
 .search-items {
     display: flex;
-    width: 50%;
+    width: 100%;
 }
