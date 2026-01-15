@@ -51,11 +51,19 @@ export default function NoteDialog({
             onClose={onClose}
             fullWidth
             maxWidth="sm"
+            slotProps={{
+                paper: {
+                    sx: {
+                        backgroundColor: 'background.paper',
+                    },
+                    elevation: 0,
+                },
+            }}
             data-testid={`note-dialog-${country.name.official}`}
         >
             <DialogActions sx={{ justifyContent: 'space-between', px: 3, pt: 2 }}>
-                <DialogTitle sx={{ p: 0, flex: 1 }}>
-                    Add Note for {country.name.official}
+                <DialogTitle sx={{ p: 0, flex: 1 , fontSize: '20px'}}>
+                    Add Note for  "{country.name.official}"
                 </DialogTitle>
                  <motion.div
                     whileHover={{ rotate: 90 }}

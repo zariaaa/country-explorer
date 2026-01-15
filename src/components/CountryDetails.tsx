@@ -33,13 +33,13 @@ export default function CountryDetailsDialog({
             fullWidth
             hideBackdrop
             slotProps={{
-            paper: {
-            sx: {
-                backgroundColor: 'background.paper',
-            },
-            elevation: 0,
-            },
-        }}
+                paper: {
+                    sx: {
+                        backgroundColor: 'background.paper',
+                    },
+                    elevation: 0,
+                },
+            }}
             data-testid={`country-dialog-${country.name.official}`}
             sx={{
                 backdropFilter: "blur(10px)",

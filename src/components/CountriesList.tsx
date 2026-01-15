@@ -16,6 +16,7 @@ import type { Country } from '../interfaces/Country.interface';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useFavourites } from '../utils/useFavourites';
+import { useDialog } from '../hooks/useDialog';
 import { NoteOutlined } from '@mui/icons-material';
 
 const CountryDetailsDialog = lazy(() => import('./CountryDetails'));
@@ -28,8 +29,8 @@ interface CountriesListProps {
 
 const CountriesList = ({ listOfData, loading }: CountriesListProps) => {
     const [page, setPage] = useState(1);
-    const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-    const [noteCountry, setNoteCountry] = useState<Country | null>(null);
+    const countryDialog = useDialog<Country>();
+    const noteDialog = useDialog<Country>();
     const itemsPerPage = 20;
     const { favourites, toggleFavourite, updateNote } = useFavourites();
 
@@ -42,22 +43,6 @@ const CountriesList = ({ listOfData, loading }: CountriesListProps) => {
     const paginated = useMemo(() => {
         return sorted.slice((page - 1) * itemsPerPage, page * itemsPerPage);
     }, [sorted, page]);
-
-    const handleOpenDialog = (country: Country) => {
-        setSelectedCountry(country);
-    };
-
-    const handleCloseDialog = () => {
-        setSelectedCountry(null);
-    };
-
-    const handleOpenNoteDialog = (country: Country) => {
-        setNoteCountry(country);
-    };
-
-    const handleCloseNoteDialog = () => {
-        setNoteCountry(null);
-    };
 
     if (loading) {
         return (
@@ -113,7 +98,7 @@ const CountriesList = ({ listOfData, loading }: CountriesListProps) => {
                                     image={country.flags.svg}
                                     alt={country.flags.alt || `Flag of ${country.name.official}`}
                                     sx={{ cursor: 'pointer' }}
-                                    onClick={() => handleOpenDialog(country)}
+                                    onClick={() => countryDialog.open(country)}
                                     data-testid={`country-flag-${uniqueId}`}
                                 />
                             </motion.div>
@@ -177,7 +162,7 @@ const CountriesList = ({ listOfData, loading }: CountriesListProps) => {
                                     whileTap={{ scale: 0.95 }}
                                 >
                                 <Button
-                                        onClick={() => handleOpenNoteDialog(country)}
+                                        onClick={() => noteDialog.open(country)}
                                         variant="outlined"
                                         data-testid={`note-button-${uniqueId}`}
                                             sx={{
@@ -237,18 +222,18 @@ const CountriesList = ({ listOfData, loading }: CountriesListProps) => {
             />
 
             <Suspense fallback={null}>
-                {selectedCountry && (
+                {countryDialog.data && (
                     <CountryDetailsDialog
-                        open={!!selectedCountry}
-                        country={selectedCountry}
-                        onClose={handleCloseDialog}
+                        open={countryDialog.isOpen}
+                        country={countryDialog.data}
+                        onClose={countryDialog.close}
                     />
                 )}
-                {noteCountry && (
+                {noteDialog.data && (
                     <NoteDialog
-                        open={!!noteCountry}
-                        country={noteCountry}
-                        onClose={handleCloseNoteDialog}
+                        open={noteDialog.isOpen}
+                        country={noteDialog.data}
+                        onClose={noteDialog.close}
                         favourites={favourites}
                         updateNote={updateNote}
                     />
