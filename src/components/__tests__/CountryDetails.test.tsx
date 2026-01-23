@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CountryDetails from '../CountryDetails';
@@ -27,12 +27,11 @@ describe('CountryDetails', () => {
         population: 1000000,
     };
 
-    const mockFavourites = {
-        'Test Country Official': 'Test note',
-    };
-
     const mockOnClose = vi.fn();
-    const mockUpdateNote = vi.fn();
+
+    beforeEach(() => {
+        mockOnClose.mockClear();
+    });
 
     it('should render country details correctly', () => {
         render(
@@ -40,35 +39,14 @@ describe('CountryDetails', () => {
                 country={mockCountry}
                 open={true}
                 onClose={mockOnClose}
-                favourites={mockFavourites}
-                updateNote={mockUpdateNote}
             />
         );
 
-        expect(screen.getByText('Test Country Official')).toBeInTheDocument();
-        expect(screen.getByText(/Region:\s*Test Region/)).toBeInTheDocument();
-        expect(screen.getByText(/Capital:\s*Test Capital/)).toBeInTheDocument();
-        expect(screen.getByText(/Population:\s*1000000/)).toBeInTheDocument();
-        expect(screen.getByText(/Languages:\s*N\/A/)).toBeInTheDocument();
-        expect(screen.getByAltText('Country flag')).toHaveAttribute('src', 'test.png');
-    });
-
-    it('should handle note updates', () => {
-        render(
-            <CountryDetails
-                country={mockCountry}
-                open={true}
-                onClose={mockOnClose}
-                favourites={mockFavourites}
-                updateNote={mockUpdateNote}
-            />
-        );
-
-        const noteInput = screen.getByRole('textbox');
-        fireEvent.change(noteInput, { target: { value: 'New test note' } });
-        fireEvent.blur(noteInput);
-
-        expect(mockUpdateNote).toHaveBeenCalledWith('Test Country Official', 'New test note');
+        expect(screen.getByTestId('dialog-title')).toHaveTextContent('Test Country Official');
+        expect(screen.getByText('Test Capital')).toBeInTheDocument();
+        expect(screen.getByText('1000000')).toBeInTheDocument();
+        expect(screen.getAllByText('N/A').length).toBeGreaterThan(0); // Languages & Currencies
+        expect(screen.getByTestId('dialog-flag')).toHaveAttribute('src', 'test.svg');
     });
 
     it('should close dialog when close button is clicked', () => {
@@ -77,14 +55,42 @@ describe('CountryDetails', () => {
                 country={mockCountry}
                 open={true}
                 onClose={mockOnClose}
-                favourites={mockFavourites}
-                updateNote={mockUpdateNote}
             />
         );
 
-        const closeButton = screen.getByRole('button', { name: /close/i });
+        const closeButton = screen.getByTestId('dialog-close-button');
         fireEvent.click(closeButton);
 
         expect(mockOnClose).toHaveBeenCalled();
+    });
+
+    it('should not render when country is null', () => {
+        const { container } = render(
+            <CountryDetails
+                country={null}
+                open={true}
+                onClose={mockOnClose}
+            />
+        );
+
+        expect(container.firstChild).toBeNull();
+    });
+
+    it('should display N/A for missing capital', () => {
+        const countryWithoutCapital: Country = {
+            ...mockCountry,
+            capital: [],
+        };
+
+        render(
+            <CountryDetails
+                country={countryWithoutCapital}
+                open={true}
+                onClose={mockOnClose}
+            />
+        );
+
+        const capitalElements = screen.getAllByText('N/A');
+        expect(capitalElements.length).toBeGreaterThan(0);
     });
 });

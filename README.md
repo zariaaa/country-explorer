@@ -75,7 +75,7 @@ A React application that allows users to explore countries, view their details, 
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/country-explorer.git
+    git clone https://github.com/zariaaa/country-explorer.git
     cd country-explorer
     ```
 
